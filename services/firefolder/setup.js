@@ -1,11 +1,15 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/auth";
+import firebase from "firebase/app"
+import "firebase/firestore"
+import "firebase/auth"
 
 const firebaseConfig = require('./firedata.json');
-const defaultApp = firebase.initializeApp(firebaseConfig,"DefaultApp");
 
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+} else {
+    firebase.app(); // if already initialized, use that one
+}
 
 // Firebase product objects
-export var auth = defaultApp.auth();
-export var db = defaultApp.firestore();
+export var auth = firebase.auth();
+export var db = firebase.firestore();
