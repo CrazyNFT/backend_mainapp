@@ -2,7 +2,21 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 
+import React, { useEffect } from 'react'
+const Profile =  require('../services/user.js')
+
+
 export default function Home() {
+
+  useEffect(() => {
+    async function firebase_call(){
+      let profile = new Profile(12)
+      console.log('Profile ', profile)
+    }
+    firebase_call();
+  },[])
+
+
   return (
     <div className={styles.container}>
       <Head>
