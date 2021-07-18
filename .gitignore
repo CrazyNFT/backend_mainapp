@@ -34,6 +34,7 @@ yarn-error.log*
 .vercel
 
 package-lock.json
+.eslintrc
 
 #firebase creds
 /services/firefolder/firedata.json
