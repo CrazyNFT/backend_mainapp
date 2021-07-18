@@ -3,17 +3,23 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 
 import React, { useEffect } from 'react'
-const Profile =  require('../services/user.js')
+const Profile =  require('../services/models/profile.js')
 
 
 export default function Home() {
 
-  useEffect(() => {
-    async function firebase_call(){
-      let profile = new Profile(12)
-      console.log('Profile ', profile)
+  useEffect(async() => {
+
+    try{
+      let profile = new Profile(350)
+      let data = await profile.init()
+      console.log('Profile ', data)
+
+    } catch(err){
+      console.log('Error ', err)
     }
-    firebase_call();
+    
+
   },[])
 
 
