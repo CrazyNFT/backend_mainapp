@@ -12,4 +12,5 @@ if (!firebase.apps.length) {
 
 // Firebase product objects
 export var auth = firebase.auth();
+export var googleAuth = new firebase.auth.GoogleAuthProvider();
 export var db = firebase.firestore();
