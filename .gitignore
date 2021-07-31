@@ -38,3 +38,6 @@ package-lock.json
 
 #firebase creds
 /services/firefolder/firedata.json
+
+#google oauth creds
+/services/auth/googlecred.json

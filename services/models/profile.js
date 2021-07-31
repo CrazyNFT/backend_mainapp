@@ -46,6 +46,27 @@ class Profile {
         }
     }
 
+    async update_user(mid, udata) {
+        
+        let newUser = user(mid, this.email)
+        
+        try {
+            const doc = db.collection(this.profileCollection).doc(mid);
+
+            await doc.update(udata)
+                     .set(newUser)
+
+            return newUser;
+        } catch (err) {
+            return err;
+        }
+    }
+
+    async gmail_login(mid, udata) {
+        
+        return 0;
+    }
+
 }
 
 module.exports = Profile;
