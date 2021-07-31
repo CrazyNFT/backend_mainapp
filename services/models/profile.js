@@ -1,4 +1,4 @@
-import { auth, db } from "../firefolder/setup.js";
+import { auth, db, googleAuth } from "../firefolder/setup.js";
 import user from './user'
 
 class Profile {
@@ -6,11 +6,11 @@ class Profile {
     constructor(metaid, email = "") {
         try {
             if (!metaid) throw new Error('Invalid Call')
-
             this.metaid = metaid;
             this.email = email;
+            this.emailVerified = false
+            this.email = null
             this.profileCollection = "CrazyProfile"
-
         } catch (err) {
             return err
         }
@@ -21,12 +21,15 @@ class Profile {
             let mid = this.metaid.toString()
             const document = db.collection(this.profileCollection).doc(mid);
             const product = await document.get()
+            let data
             if (!product.exists) {
-                let data = await this.create_user(mid);
-                return data
+                data = await this.create_user(mid);
+            } else{
+                data = product.data()
             }
-            return product.data();
-
+            this.emailVerified = data.emailVerified
+            this.email = data.email
+            return data;
         } catch (err) {
             return err;
         }
@@ -46,24 +49,49 @@ class Profile {
         }
     }
 
-    async update_user(mid, udata) {
-        
-        let newUser = user(mid, this.email)
-        
+    async isProfileVerified() {
+        if (this.emailVerified && this.email) {
+            return this.email
+        } else return false
+    }
+
+    async verifyUser() {
         try {
+            let mid = this.metaid.toString()
             const doc = db.collection(this.profileCollection).doc(mid);
-
-            await doc.update(udata)
-                     .set(newUser)
-
-            return newUser;
+            await doc.update({emailVerified: this.emailVerified, email: this.email})
+            return "User Verified";
         } catch (err) {
             return err;
         }
     }
 
-    async gmail_login(mid, udata) {
-        
+    async gmail_login() {
+
+        if (this.emailVerified && this.email) {
+            return new Error('Profile Already Verified!!')
+        }
+
+        auth.signInWithPopup(googleAuth)
+            .then(async(result) => {
+                let user = result.user;
+                this.email = user.email
+                this.emailVerified = user.emailVerified
+                let res = await this.verifyUser()
+                if(res === "User Verified"){
+                    return res
+                } else throw new Error('User Not Verified')
+            }).catch((error) => {
+                return error
+            })
+    }
+
+    async facebook_login() {
+
+        if (this.emailVerified && this.email) {
+            return new Error('Profile Already Verified!!')
+        }
+
         return 0;
     }
 
