@@ -13,6 +13,7 @@ export default function Home() {
     try{
       let profile = new Profile(350)
       let data = await profile.init()
+      await profile.gmail_login()
       console.log('Profile ', data)
 
     } catch(err){
